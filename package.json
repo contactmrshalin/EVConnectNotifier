@@ -1,0 +1,49 @@
+{
+  "name": "evconnect-notifier",
+  "version": "1.0.0",
+  "description": "Cross-platform tray app that polls the EV Connect API and notifies when a charger becomes available",
+  "main": "src/main.js",
+  "private": true,
+  "scripts": {
+    "icons": "node scripts/make-icons.js",
+    "start": "npm run icons && electron .",
+    "dist": "npm run icons && electron-builder",
+    "dist:mac": "npm run icons && electron-builder --mac",
+    "dist:win": "npm run icons && electron-builder --win",
+    "dist:extension": "npm run icons && node scripts/pack-extension.js"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.local.evconnect.notifier",
+    "productName": "EV Connect Notifier",
+    "files": [
+      "src/**",
+      "renderer/**",
+      "assets/**"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "assets/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "identity": null
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png",
+      "category": "Utility"
+    }
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}

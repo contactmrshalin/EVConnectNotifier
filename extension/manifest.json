@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Charger Availability Notifier",
+  "version": "1.0.0",
+  "description": "Watches your EV charging locations and notifies you the moment a connector becomes available. Not affiliated with EV Connect.",
+  "minimum_chrome_version": "102",
+  "permissions": ["alarms", "notifications", "storage", "declarativeNetRequestWithHostAccess"],
+  "host_permissions": ["https://ops.evconnect.com/*"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "evc-headers",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Charger Availability Notifier",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

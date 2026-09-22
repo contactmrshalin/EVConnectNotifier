@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "priority": 1,
+    "action": {
+      "type": "modifyHeaders",
+      "requestHeaders": [
+        { "header": "Origin", "operation": "set", "value": "https://ops.evconnect.com" },
+        { "header": "Referer", "operation": "set", "value": "https://ops.evconnect.com/driver-portal" }
+      ]
+    },
+    "condition": {
+      "urlFilter": "||ops.evconnect.com/mobile/rest/",
+      "resourceTypes": ["xmlhttprequest"]
+    }
+  }
+]

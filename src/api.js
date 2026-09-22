@@ -1,0 +1,127 @@
+const USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36';
+
+function buildHeaders(settings, { withAuth = true, json = false } = {}) {
+  const headers = {
+    Accept: 'application/json, text/plain, */*',
+    'Accept-Language': 'en-US',
+    Referer: `${settings.baseUrl}/driver-portal`,
+    'X-Evc-Network-Id': settings.networkId,
+    'X-Platform': 'web',
+    'mobile-app-version': settings.appVersion,
+    'User-Agent': USER_AGENT,
+  };
+  if (json) {
+    headers['Content-Type'] = 'application/json;charset=UTF-8';
+    headers.Origin = settings.baseUrl;
+  }
+  if (withAuth && settings.apiToken) headers['EVC-API-TOKEN'] = settings.apiToken;
+  return headers;
+}
+
+async function send(settings, { path, method = 'GET', body, withAuth = true }) {
+  const url = new URL(path, settings.baseUrl).toString();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: buildHeaders(settings, { withAuth, json: Boolean(body) }),
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
+    const text = await response.text();
+    let parsed = null;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      parsed = null;
+    }
+
+    if (response.status === 401 || response.status === 403) {
+      const error = new Error('Session expired (401/403).');
+      error.unauthorized = true;
+      throw error;
+    }
+    if (!response.ok) {
+      const error = new Error(parsed?.message || `HTTP ${response.status}: ${text.slice(0, 160)}`);
+      error.messageKey = parsed?.messageKey;
+      if (parsed?.messageKey === 'refresh-token-invalid') error.refreshTokenInvalid = true;
+      throw error;
+    }
+    if (parsed === null) throw new Error('EV Connect returned a non-JSON response.');
+    return parsed;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function decodeJwt(token) {
+  if (typeof token !== 'string') return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  try {
+    return JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function expiresAt(token) {
+  const exp = decodeJwt(token)?.exp;
+  return typeof exp === 'number' ? exp * 1000 : null;
+}
+
+function extractTokens(data, context) {
+  const result = {};
+  const visit = (node) => {
+    if (typeof node === 'string') {
+      const claims = decodeJwt(node);
+      if (!claims) return;
+      // The access token carries userRole; the refresh token carries createdTimeMillis.
+      if (claims.userRole || claims.refreshTokenInfoId) result.apiToken = node;
+      else if (claims.createdTimeMillis) result.refreshToken = node;
+      return;
+    }
+    if (node && typeof node === 'object') Object.values(node).forEach(visit);
+  };
+  visit(data);
+
+  if (!result.apiToken) throw new Error(`${context} succeeded but no API token was found in the response.`);
+  return result;
+}
+
+// Refresh tokens are single-use: the server rotates them on every call, so the
+// pair returned here must be persisted before the next request.
+async function refreshSession(settings) {
+  if (!settings.refreshToken) {
+    throw new Error('No refresh token saved — sign in or paste one in Settings.');
+  }
+  const data = await send(settings, {
+    path: settings.authPath,
+    method: 'PUT',
+    body: { token: settings.refreshToken },
+    withAuth: false,
+  });
+  return extractTokens(data, 'Refresh');
+}
+
+async function fetchLocations(settings) {
+  if (!settings.apiToken && !settings.refreshToken) {
+    throw new Error('Not signed in. Open Settings.');
+  }
+  return send(settings, { path: settings.locationsPath });
+}
+
+async function login(settings, email, password) {
+  if (!email || !password) throw new Error('Enter your email and password first.');
+  const data = await send(settings, {
+    path: settings.authPath,
+    method: 'POST',
+    body: { email, password, networkId: settings.networkId },
+    withAuth: false,
+  });
+  return extractTokens(data, 'Login');
+}
+
+module.exports = { fetchLocations, login, refreshSession, expiresAt, decodeJwt };

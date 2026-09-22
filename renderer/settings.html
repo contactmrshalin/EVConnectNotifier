@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:;"
+    />
+    <title>EV Connect Notifier Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+
+    <main>
+      <header class="app-header">
+        <div class="brand-mark" aria-hidden="true"><span></span></div>
+        <div>
+          <p class="eyebrow">Desktop companion</p>
+          <h1>EV Connect Notifier</h1>
+          <p class="subtitle">Know when a connector at one of your saved locations opens up.</p>
+        </div>
+      </header>
+
+      <aside class="privacy-note">
+        <strong>Your sign-in stays private</strong>
+        <span>Your password is used only to sign in, then immediately discarded. Session tokens stay encrypted on this device.</span>
+      </aside>
+
+      <section class="panel">
+        <div class="section-heading">
+          <span class="step">01</span>
+          <div><h2>Connect your account</h2><p>Use the same account as the EV Connect driver portal.</p></div>
+        </div>
+        <div class="field-grid">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" autocomplete="username" placeholder="you@example.com" />
+          </div>
+          <div class="field">
+            <label for="password">Password</label>
+            <input id="password" type="password" autocomplete="current-password" placeholder="Your EV Connect password" />
+          </div>
+        </div>
+        <button id="login" type="button" class="primary">Sign in securely</button>
+      </section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <span class="step">02</span>
+          <div><h2>Monitoring</h2><p>Choose how often to check your saved charging locations.</p></div>
+        </div>
+        <div class="field">
+          <label for="pollingMinutes">Check availability</label>
+          <select id="pollingMinutes">
+            <option value="5">Every 5 minutes</option>
+            <option value="15">Every 15 minutes</option>
+            <option value="30">Every 30 minutes</option>
+            <option value="0">Paused — keep me signed in</option>
+          </select>
+        </div>
+        <div class="toggle-list">
+          <label class="checkbox"><input id="playSound" type="checkbox" /><span>Play a sound with notifications</span></label>
+          <label class="checkbox"><input id="startAtLogin" type="checkbox" /><span>Launch automatically when I sign in</span></label>
+        </div>
+        <button id="test" type="button" class="secondary">Send test notification</button>
+      </section>
+
+      <details class="panel advanced">
+        <summary>Advanced connection settings</summary>
+        <div class="details-content">
+          <p class="hint">Manual tokens are optional. Session tokens are encrypted by your operating system and rotate automatically.</p>
+          <label for="apiToken">EVC-API-TOKEN</label>
+          <textarea id="apiToken" rows="3" spellcheck="false" placeholder="Short-lived API token"></textarea>
+          <label for="refreshToken">Refresh token</label>
+          <textarea id="refreshToken" rows="3" spellcheck="false" placeholder="Long-lived rotating token"></textarea>
+          <div class="field-grid">
+            <div class="field"><label for="baseUrl">Base URL</label><input id="baseUrl" type="text" spellcheck="false" /></div>
+            <div class="field"><label for="networkId">Network ID</label><input id="networkId" type="text" spellcheck="false" /></div>
+            <div class="field"><label for="locationsPath">Locations path</label><input id="locationsPath" type="text" spellcheck="false" /></div>
+            <div class="field"><label for="authPath">Token refresh path</label><input id="authPath" type="text" spellcheck="false" /></div>
+            <div class="field"><label for="appVersion">Mobile app version</label><input id="appVersion" type="text" spellcheck="false" /></div>
+          </div>
+        </div>
+      </details>
+    </main>
+
+    <footer>
+      <span id="status" role="status"></span>
+      <button id="save" type="button" class="primary">Save</button>
+    </footer>
+
+    <script src="settings.js"></script>
+  </body>
+</html>

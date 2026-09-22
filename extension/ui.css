@@ -1,0 +1,156 @@
+:root {
+  color-scheme: light;
+  font-family: "Avenir Next", Avenir, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  color: #17211b;
+  background: #edf3ef;
+  letter-spacing: 0;
+  --green: #087f5b;
+  --green-dark: #065f46;
+  --muted: #607067;
+  --line: #d8e1db;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 14px 16px;
+  background: #fff;
+}
+
+body.popup {
+  width: 340px;
+  min-height: 180px;
+  border-top: 4px solid var(--green);
+}
+
+body.options-page {
+  min-height: 100vh;
+  padding: 34px 24px;
+  background: linear-gradient(135deg, rgba(8, 127, 91, 0.08), transparent 42%), #edf3ef;
+}
+.options-shell { width: min(680px, 100%); margin: 0 auto; }
+.app-header { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; }
+.brand-mark { width: 52px; height: 52px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 8px; background: var(--green); box-shadow: 0 10px 24px rgba(8, 127, 91, 0.2); }
+.brand-mark::before { content: ""; width: 22px; height: 28px; border: 3px solid white; border-radius: 4px; }
+.brand-mark span { position: absolute; width: 8px; height: 3px; margin-top: 35px; background: #f6c453; border-radius: 2px; }
+.eyebrow { margin: 0 0 3px; color: var(--green); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; }
+.subtitle { margin: 6px 0 0; color: var(--muted); line-height: 1.45; }
+
+h1 {
+  font-size: 24px;
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: 0;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 2px;
+  letter-spacing: 0;
+}
+
+.privacy-note { display: grid; gap: 3px; margin-bottom: 14px; padding: 13px 16px; border-left: 4px solid var(--green); background: #dff4e9; color: #174c38; border-radius: 0 6px 6px 0; }
+.privacy-note span { font-size: 12px; line-height: 1.5; }
+.panel { margin-bottom: 14px; padding: 20px; background: white; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 5px 18px rgba(24, 45, 33, 0.05); }
+.section-heading { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+.section-heading p { color: var(--muted); margin: 0; font-size: 12px; }
+.step { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto; border-radius: 50%; background: #17211b; color: white; font-size: 10px; font-weight: 800; }
+.field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.account-state { margin: 0; padding: 12px; background: #f0f7f3; border-radius: 6px; font-weight: 700; }
+
+.summary {
+  font-weight: 600;
+  margin: 2px 0 10px;
+  font-size: 15px;
+}
+
+ul {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+li {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+li .meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+label {
+  display: block;
+  margin: 10px 0 5px;
+  color: #34473b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+input,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
+  padding: 9px 11px;
+  border-radius: 6px;
+  border: 1px solid #c8d4cc;
+  outline: none;
+  background: #fbfdfb;
+  color: inherit;
+  font: inherit;
+}
+input:focus, select:focus { border-color: var(--green); background: white; box-shadow: 0 0 0 3px rgba(8, 127, 91, 0.12); }
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #b8c6bd;
+  background: white;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+}
+
+button.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  font-weight: 600;
+}
+
+.status {
+  margin-top: 10px;
+  color: var(--muted);
+}
+
+.status.error {
+  color: #b42318;
+}
+
+.disclaimer {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  body.options-page { padding: 22px 16px; }
+  .field-grid { grid-template-columns: 1fr; gap: 0; }
+}

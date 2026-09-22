@@ -1,0 +1,9 @@
+.github/instructions/wmt-copilot.instructions.md
+.vscode/
+node_modules/
+assets/
+extension/icons/
+extension/_metadata/
+dist/
+.wibey-tasks/
+.DS_Store

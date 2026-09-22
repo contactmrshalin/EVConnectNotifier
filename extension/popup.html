@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Charger Availability</title>
+    <link rel="stylesheet" href="ui.css" />
+  </head>
+  <body class="popup">
+    <div class="summary" id="summary">Loading…</div>
+    <ul id="list"></ul>
+    <div class="status" id="status"></div>
+
+    <label for="pollingMinutes">Check every</label>
+    <select id="pollingMinutes">
+      <option value="5">5 minutes</option>
+      <option value="15">15 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="0">Never — paused (stay signed in)</option>
+    </select>
+
+    <div class="row">
+      <button id="refresh" class="primary" type="button">Refresh now</button>
+      <button id="options" type="button">Settings</button>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
