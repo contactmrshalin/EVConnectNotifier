@@ -12,6 +12,8 @@ async function load() {
 
   $('pollingMinutes').value = String(settings.pollingMinutes);
   $('networkId').value = settings.networkId;
+
+  $('ntfyTopic').value = settings.ntfyTopic;
   $('email').value = settings.email;
 
   const signedIn = Boolean(settings.refreshToken || settings.apiToken);
@@ -49,6 +51,8 @@ $('save').addEventListener('click', async () => {
     patch: {
       pollingMinutes: Number($('pollingMinutes').value),
       networkId: $('networkId').value.trim(),
+
+      ntfyTopic: $('ntfyTopic').value.trim(),
     },
   });
   setStatus('Saved.');

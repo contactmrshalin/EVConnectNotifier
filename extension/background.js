@@ -68,6 +68,19 @@ async function notify(title, message) {
   });
 }
 
+async function notifyNtfy(title, message) {
+
+  const { ntfyTopic } = await getSettings();
+  const topic = ntfyTopic.trim();
+  if (!topic) return;
+  const response = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
+    method: 'POST',
+    headers: { Title: title },
+    body: message,
+  });
+  if (!response.ok) throw new Error(`ntfy request failed: ${response.status}`);
+}
+
 export async function poll() {
   try {
     let settings = await ensureSession();
@@ -88,10 +101,13 @@ export async function poll() {
     // previous.updatedAt null means this is the first successful poll, so only baseline.
     if (previous.updatedAt && newly.length > 0) {
       const labels = newly.map((c) => c.label);
-      await notify(
-        labels.length === 1 ? 'Charger available' : `${labels.length} chargers available`,
-        labels.slice(0, 5).join('\n')
-      ).catch(async (failure) => {
+
+      const title = labels.length === 1 ? 'Charger available' : `${labels.length} chargers available`;
+      const message = labels.slice(0, 5).join('\n');
+      await notify(title, message).catch(async (failure) => {
+        await setState({ notificationError: failure.message });
+      });
+      await notifyNtfy(title, message).catch(async (failure) => {
         await setState({ notificationError: failure.message });
       });
     }
@@ -167,6 +183,8 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         return sendResponse({ ok: true, settings: await getSettings() });
       }
       case 'test-notification':
+
+        await notifyNtfy('Charger Availability Notifier', 'Notifications are working.');
         await notify('Charger Availability Notifier', 'Notifications are working.');
         return sendResponse({ ok: true });
       default:

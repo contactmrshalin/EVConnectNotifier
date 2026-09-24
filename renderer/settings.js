@@ -3,6 +3,8 @@ const TEXT_FIELDS = [
   'refreshToken',
   'email',
   'baseUrl',
+
+  'ntfyTopic',
   'locationsPath',
   'authPath',
   'networkId',

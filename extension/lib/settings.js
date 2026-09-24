@@ -1,5 +1,7 @@
 export const DEFAULTS = {
   baseUrl: 'https://ops.evconnect.com',
+
+  ntfyTopic: 'ev-crossman',
   locationsPath: '/mobile/rest/v6/users/current/locations',
   authPath: '/mobile/rest/v6/auth',
   networkId: 'ev-connect',

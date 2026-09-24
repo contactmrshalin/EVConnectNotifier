@@ -34,6 +34,18 @@ function notify(title, body) {
   new Notification({ title, body, silent: !store.load().playSound }).show();
 }
 
+async function notifyNtfy(title, body) {
+
+  const topic = store.load().ntfyTopic.trim();
+  if (!topic) return;
+  const response = await fetch(`https://ntfy.sh/${encodeURIComponent(topic)}`, {
+    method: 'POST',
+    headers: { Title: title },
+    body,
+  });
+  if (!response.ok) throw new Error(`ntfy request failed: ${response.status}`);
+}
+
 const TOKEN_REFRESH_MARGIN_MS = 5 * 60 * 1000;
 
 // Swaps the rotating refresh token for a fresh API token and persists both.
@@ -72,10 +84,11 @@ async function poll() {
 
     if (state.hasBaseline && newlyAvailable.length > 0) {
       const labels = newlyAvailable.map((p) => p.label);
-      notify(
-        labels.length === 1 ? 'Charger available' : `${labels.length} chargers available`,
-        labels.slice(0, 5).join('\n')
-      );
+
+      const title = labels.length === 1 ? 'Charger available' : `${labels.length} chargers available`;
+      const body = labels.slice(0, 5).join('\n');
+      notify(title, body);
+      notifyNtfy(title, body).catch(() => {});
     }
 
     state.ports = ports;
@@ -245,8 +258,12 @@ ipcMain.handle('auth:login', async (_event, { email, password }) => {
   return { expiresAt: state.sessionExpiresAt };
 });
 
-ipcMain.handle('notify:test', () => {
-  notify('EV Connect Notifier', 'Notifications are working.');
+ipcMain.handle('notify:test', async () => {
+
+  const title = 'EV Connect Notifier';
+  const body = 'Notifications are working.';
+  notify(title, body);
+  await notifyNtfy(title, body);
   return true;
 });
 
