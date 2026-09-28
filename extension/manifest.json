@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Charger Availability Notifier",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Watches your EV charging locations and notifies you the moment a connector becomes available. Not affiliated with EV Connect.",
   "minimum_chrome_version": "102",
   "permissions": ["alarms", "notifications", "storage", "declarativeNetRequestWithHostAccess"],
